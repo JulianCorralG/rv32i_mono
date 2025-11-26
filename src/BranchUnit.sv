@@ -1,30 +1,30 @@
 module BranchUnit (
-    input logic signed [31:0] RURs1, RURs2,
-    input logic [4:0] BrOp,
+    input logic signed [31:0] RURs1, RURs2, // Operandos a comparar
+    input logic [4:0] BrOp,                 // Operación de salto (incluye Funct3 y flags)
 
-    output logic NextPCSrc // Debería ser un flag (BranchTaken)
+    output logic NextPCSrc // 1 si se debe saltar, 0 si sigue secuencial
 );
 
-    logic BranchTaken;
+    logic BranchTaken; // Señal interna: ¿Se cumple la condición del Branch?
     
-    // Asumimos que BrOp[2:0] es Funct3
+    // Evalúa la condición basada en Funct3 (BrOp[2:0])
     always @* begin
         BranchTaken = 1'b0;
         
-        case (BrOp[2:0]) // Funct3
-            3'b000: BranchTaken = (RURs1 == RURs2); // BEQ
-            3'b001: BranchTaken = (RURs1 != RURs2); // BNE
-            3'b100: BranchTaken = (RURs1 < RURs2); // BLT
-            3'b101: BranchTaken = (RURs1 >= RURs2); // BGE
-            3'b110: BranchTaken = ($unsigned(RURs1) < $unsigned(RURs2)); // BLTU (Unsigned)
+        case (BrOp[2:0]) 
+            3'b000: BranchTaken = (RURs1 == RURs2); // BEQ: Iguales
+            3'b001: BranchTaken = (RURs1 != RURs2); // BNE: Diferentes
+            3'b100: BranchTaken = (RURs1 < RURs2);  // BLT: Menor que (signo)
+            3'b101: BranchTaken = (RURs1 >= RURs2); // BGE: Mayor o igual (signo)
+            3'b110: BranchTaken = ($unsigned(RURs1) < $unsigned(RURs2));  // BLTU (Unsigned)
             3'b111: BranchTaken = ($unsigned(RURs1) >= $unsigned(RURs2)); // BGEU (Unsigned)
             default: BranchTaken = 1'b0;
         endcase
     end
     
-    // La salida NextPCSrc determina si se toma el salto (Branch o Jump)
-    // BrOp[4] indica salto incondicional (JAL, JALR)
-    // BrOp[3] indica instrucción de Branch
+    // Determina si se toma el salto:
+    // BrOp[4] = 1 -> Salto incondicional (JAL, JALR)
+    // BrOp[3] = 1 -> Instrucción Branch (verifica condición BranchTaken)
     assign NextPCSrc = BrOp[4] | (BrOp[3] & BranchTaken);
     
 endmodule

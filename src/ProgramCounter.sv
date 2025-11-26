@@ -1,23 +1,22 @@
 module PC (
-    input logic clk, reset,
-    input logic [31:0] NextPC,
+    input logic clk, reset,       // Reloj y Reset
+    input logic [31:0] NextPC,    // Siguiente dirección a la que saltar
 
-    output logic [31:0] PCOutput
+    output logic [31:0] PCOutput  // Dirección actual
 );
 
-    // El PC es un registro que almacena su valor
+    // Registro interno para almacenar el PC
     logic [31:0] current_PC;
 
-    // Conexión de la salida: la dirección actual es el valor almacenado
+    // La salida es el valor almacenado
     assign PCOutput = current_PC;
 
-    // Lógica síncrona: El PC se actualiza en el flanco positivo del reloj
+    // Actualización síncrona en flanco de subida del reloj
     always @(posedge clk or posedge reset) begin
-        // La lógica de reseteo siempre tiene prioridad
         if (reset)
-            current_PC <= 32'h00000000; // Inicializa el PC a la dirección 0
+            current_PC <= 32'h00000000; // Reset asíncrono a 0
         else
-            current_PC <= NextPC;   // Actualiza con la dirección de la siguiente instrucción
+            current_PC <= NextPC;       // Carga nuevo valor
     end
     
 endmodule
