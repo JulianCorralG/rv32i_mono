@@ -60,16 +60,22 @@ module ControlUnit (
                 BrOp = 5'b00000; 
                 RUDataWrSrc = 2'b00;
                 // ALUOp depende de Funct3
-                case ({1'b0,Funct3})
+                case (Funct3)
                     3'b000: ALUOp = 4'b0000; // ADDI
                     3'b001: ALUOp = 4'b0001; // SLLI
                     3'b010: ALUOp = 4'b0010; // SLTI
                     3'b011: ALUOp = 4'b0011; // SLTIU
                     3'b100: ALUOp = 4'b0100; // XORI
-                    3'b101: ALUOp = 4'b0101; // SRLI MISMO FUNC3 PARA SRLI Y SRAI, ERROR?
-                    3'b101: ALUOp = 4'b1101; // SRAI MISMO FUNC3 PARA SRLI Y SRAI, ERROR?
+                    3'b101: begin
+                        // Diferenciar SRLI vs SRAI usando Funct7[5] (bit 30 de instr)
+                        if (Funct7[5]) 
+                            ALUOp = 4'b1101; // SRAI (Arithmetic)
+                        else 
+                            ALUOp = 4'b0101; // SRLI (Logical)
+                    end
                     3'b110: ALUOp = 4'b0110; // ORI
                     3'b111: ALUOp = 4'b0111; // ANDI
+                    default: ALUOp = 4'b0000;
                 endcase
             end
 
@@ -99,7 +105,7 @@ module ControlUnit (
             7'b1100011: begin
                 RUWr = 1'b0; 
                 ALUOp = 4'b0000; 
-                ImmSrc = 3'b101; 
+                ImmSrc = 3'b010; // CORREGIDO: B-Type es 010 en ImmGen 
                 ALUASrc = 1'b1; 
                 ALUBSrc = 1'b1; 
                 DMWr = 1'b0; 
