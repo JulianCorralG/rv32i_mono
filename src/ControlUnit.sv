@@ -3,7 +3,7 @@ module ControlUnit (
     input logic [2:0] Funct3,
 
     output logic RUWr, ALUASrc, ALUBSrc, DMWr,
-    output logic [1:0] RUDataWrSrc
+    output logic [1:0] RUDataWrSrc,
     output logic [2:0] ImmSrc, DMCtrl,
     output logic [3:0] ALUOp,
     output logic [4:0] BrOp
@@ -142,13 +142,26 @@ module ControlUnit (
             7'b1101111: begin
                 RUWr = 1'b1; 
                 ALUOp = 4'b0000; 
-                ImmSrc = 3'b110; 
-                ALUASrc = 1'b1; 
-                ALUBSrc = 1'b1; 
+                ImmSrc = 3'b011; // J-Type (Corregido de 3'b110 a 3'b011 según ImmGen)
+                ALUASrc = 1'b1; // PC
+                ALUBSrc = 1'b1; // Imm
                 DMWr = 1'b0; 
                 DMCtrl = 3'b000; 
-                BrOp = 5'b10000; 
-                RUDataWrSrc = 2'b10;
+                BrOp = 5'b10000; // Jump incondicional
+                RUDataWrSrc = 2'b10; // PC+4
+            end
+
+            // JALR
+            7'b1100111: begin
+                RUWr = 1'b1;
+                ALUOp = 4'b0000; // ADD
+                ImmSrc = 3'b000; // I-Type
+                ALUASrc = 1'b0; // Rs1
+                ALUBSrc = 1'b1; // Imm
+                DMWr = 1'b0;
+                DMCtrl = 3'b000;
+                BrOp = 5'b10000; // Jump incondicional
+                RUDataWrSrc = 2'b10; // PC+4
             end
 
             default: ; 

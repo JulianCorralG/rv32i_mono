@@ -22,9 +22,9 @@ module BranchUnit (
         endcase
     end
     
-    // La salida NextPCSrc en el diagrama parece ser el selector final del PC MUX.
-    // Si la instrucción es Branch y la condición se cumple, se activa la lógica para el MUX.
-    // Aquí solo se determina si la condición se cumple.
-    assign NextPCSrc = BranchTaken; // Ajusta este nombre de señal al MUX final
+    // La salida NextPCSrc determina si se toma el salto (Branch o Jump)
+    // BrOp[4] indica salto incondicional (JAL, JALR)
+    // BrOp[3] indica instrucción de Branch
+    assign NextPCSrc = BrOp[4] | (BrOp[3] & BranchTaken);
     
 endmodule

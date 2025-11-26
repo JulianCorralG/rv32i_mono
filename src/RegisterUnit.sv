@@ -8,9 +8,9 @@ module RegistersUnit (
 );
     logic [31:0] RU [31:0];
 
-    initial begin
-        RU[2] = 32'b1000000000; //512
-    end
+    // initial begin
+    //     RU[2] = 32'b1000000000; //512
+    // end
 
     // Corrección de la lectura: Si el índice es 0, la salida es 0.
     assign RURs1 = (Rs1 == 5'b0) ? 32'h00000000 : RU[Rs1];
