@@ -6,7 +6,7 @@ module ControlUnit (
     output logic [1:0] RUDataWrSrc
     output logic [2:0] ImmSrc, DMCtrl,
     output logic [3:0] ALUOp,
-    output logic [4:0] BrOp,
+    output logic [4:0] BrOp
 );
 
     always_comb begin
