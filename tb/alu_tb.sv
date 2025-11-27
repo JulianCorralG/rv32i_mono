@@ -37,6 +37,22 @@ module alu_tb;
         A = 20; B = 10; ALUOp = 4'b0010; #10;
         if (ALURes !== 0) $error("SLT failed: 20 < 10");
 
+        // Test XOR
+        A = 32'hF0F0F0F0; B = 32'hFFFF0000; ALUOp = 4'b0100; #10;
+        if (ALURes !== 32'h0F0FF0F0) $error("XOR failed");
+
+        // Test SLL (Shift Left Logical)
+        A = 32'h00000001; B = 4; ALUOp = 4'b0001; #10;
+        if (ALURes !== 32'h00000010) $error("SLL failed: 1 << 4");
+
+        // Test SRL (Shift Right Logical)
+        A = 32'hF0000000; B = 4; ALUOp = 4'b0101; #10;
+        if (ALURes !== 32'h0F000000) $error("SRL failed: F0000000 >> 4");
+
+        // Test SRA (Shift Right Arithmetic)
+        A = 32'hF0000000; B = 4; ALUOp = 4'b1101; #10;
+        if (ALURes !== 32'hFF000000) $error("SRA failed: F0000000 >>> 4");
+
         $display("ALU Testbench Completed");
         $finish;
     end
