@@ -4,7 +4,8 @@ module RegistersUnit (
     input logic [31:0] DataWr,
 
     output logic [31:0] RURs1,
-    output logic [31:0] RURs2
+    output logic [31:0] RURs2,
+    output logic [31:0] x3_out   // Salida del registro x3
 );
     logic [31:0] RU [31:0];
 
@@ -15,6 +16,7 @@ module RegistersUnit (
     // Corrección de la lectura: Si el índice es 0, la salida es 0.
     assign RURs1 = (Rs1 == 5'b0) ? 32'h00000000 : RU[Rs1];
     assign RURs2 = (Rs2 == 5'b0) ? 32'h00000000 : RU[Rs2];
+    assign x3_out = RU[3];  // Exponer registro x3
 
     always @(posedge clk) begin
         if(RUWr && (Rd != 0))

@@ -7,7 +7,7 @@ module DataMemory (
 );
 
     // 1. Declaración del Banco de Memoria
-    localparam MEM_SIZE_WORDS = 1024; 
+    localparam MEM_SIZE_WORDS = 128; 
     logic [31:0] mem [MEM_SIZE_WORDS-1:0];
 
     // Variables para el indexado de la dirección

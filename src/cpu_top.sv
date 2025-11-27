@@ -2,7 +2,8 @@ module cpu_top (
     input logic clk,
     input logic reset,
     output logic [31:0] WriteData, // Para verificar escritura en memoria/reg
-    output logic [31:0] DataAdr    // Para verificar dirección de memoria
+    output logic [31:0] DataAdr,   // Para verificar dirección de memoria
+    output logic [31:0] x3_out     // Salida del registro x3 para display
 );
 
     // Señales de interconexión
@@ -67,7 +68,8 @@ module cpu_top (
         .Rd(Instr[11:7]),
         .DataWr(Result),
         .RURs1(RD1),
-        .RURs2(RD2)
+        .RURs2(RD2),
+        .x3_out(x3_out)  // Conectar x3 directamente a salida del módulo
     );
 
     // 6. Immediate Generator
